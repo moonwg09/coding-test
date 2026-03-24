@@ -1,25 +1,23 @@
-
-chars = list(input())
+chars = input()
 
 total = 0
 
 for char in chars:
-    if char == 'W' or char == 'Z' or char == 'X' or char == 'Y':
+    if char in 'WXYZ':
         total += 10
-    if char == 'T' or char == 'U' or char == 'V':
+    elif char in 'TUV':
         total += 9
-    if char == 'P' or char == 'Q' or char == 'R' or char == 'S':
+    elif char in 'PQRS':
         total += 8
-    if char == 'M' or char == 'N' or char == 'O':
+    elif char in 'MNO':
         total += 7
-    if char == 'J' or char == 'K' or char == 'L':
+    elif char in 'JKL':
         total += 6
-    if char == 'G' or char == 'H' or char == 'I':
+    elif char in 'GHI':
         total += 5
-    if char == 'D' or char == 'E' or char == 'F':
+    elif char in 'DEF':
         total += 4
-    if char == 'A' or char == 'B' or char == 'C':
+    elif char in 'ABC':
         total += 3
-   
 
 print(total)
