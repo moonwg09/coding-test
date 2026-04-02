@@ -1,23 +1,18 @@
-
 n = int(input())
+count = 0
 
-n5 = n // 5
-n3 = n // 3
-
-min_bag = 9999 # 최솟값을 찾기 위해 처음엔 아주 큰 값을 줍니다.
-is_found = False
-
-for i in range(n5 + 1):
-    for j in range(n3 + 1):
-        # n5, n3가 아니라 현재 반복문의 변수인 i와 j를 곱해서 더해야 합니다!
-        if i * 5 + j * 3 == n:
-            is_found = True
-            cur_bag = i + j
-            if min_bag > cur_bag:
-                min_bag = cur_bag
-
-# 논리를 올바르게 수정: 못 찾았으면(False) -1 출력, 찾았으면 min_bag 출력
-if not is_found: 
-    print(-1)
-else:
-    print(min_bag)
+while True:
+    # 1. 현재 남은 설탕이 5로 딱 나누어 떨어지면 가장 베스트!
+    if n % 5 == 0:
+        count += (n // 5)
+        print(count)
+        break
+    
+    # 2. 5로 안 나누어 떨어지는데, 남은 설탕이 3보다 작아서 더 뺄 수도 없다면? (실패)
+    if n < 3:
+        print(-1)
+        break
+        
+    # 3. 5로 나누어 떨어질 때까지 3kg 봉지에 하나씩 담아봅니다.
+    n -= 3
+    count += 1
