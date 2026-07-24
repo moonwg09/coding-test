@@ -1,0 +1,38 @@
+name: Organize Programmers Files
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  organize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Organize files
+        run: |
+          if [ -d "프로그래머스" ]; then
+            cd 프로그래머스
+            for item in *; do
+              if [ "$item" != "Python" ] && [ "$item" != "CSharp" ]; then
+                if find "$item" -name "*.cs" | grep -q .; then
+                  echo "Moving $item to CSharp"
+                  mkdir -p CSharp
+                  mv "$item" CSharp/
+                elif find "$item" -name "*.py" | grep -q .; then
+                  echo "Moving $item to Python"
+                  mkdir -p Python
+                  mv "$item" Python/
+                fi
+              fi
+            done
+          fi
+
+      - name: Commit and push if changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Auto-sort Programmers solutions into Python/CSharp folders"
+          branch: main
+          create_branch: false
