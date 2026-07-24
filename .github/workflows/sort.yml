@@ -15,16 +15,20 @@ jobs:
         run: |
           if [ -d "프로그래머스" ]; then
             cd 프로그래머스
-            for item in *; do
-              if [ "$item" != "Python" ] && [ "$item" != "CSharp" ]; then
-                if find "$item" -name "*.cs" | grep -q .; then
-                  echo "Moving $item to CSharp"
-                  mkdir -p CSharp
-                  mv "$item" CSharp/
-                elif find "$item" -name "*.py" | grep -q .; then
-                  echo "Moving $item to Python"
-                  mkdir -p Python
-                  mv "$item" Python/
+            # 0 폴더나 개별 문제 폴더들을 탐색
+            for d in */; do
+              dir_name=$(basename "$d")
+              if [ "$dir_name" != "Python" ] && [ "$dir_name" != "CSharp" ] && [ "$dir_name" != "파이썬" ]; then
+                if [ -d "$d" ]; then
+                  if find "$d" -name "*.cs" | grep -q .; then
+                    echo "Moving $dir_name to CSharp"
+                    mkdir -p CSharp
+                    mv "$d" CSharp/
+                  elif find "$d" -name "*.py" | grep -q .; then
+                    echo "Moving $dir_name to 파이썬"
+                    mkdir -p 파이썬
+                    mv "$d" 파이썬/
+                  fi
                 fi
               fi
             done
@@ -33,6 +37,6 @@ jobs:
       - name: Commit and push if changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "Auto-sort Programmers solutions into Python/CSharp folders"
+          commit_message: "Auto-sort Programmers solutions into 파이썬/CSharp folders"
           branch: main
           create_branch: false
