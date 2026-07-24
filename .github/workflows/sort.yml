@@ -4,6 +4,10 @@ on:
   push:
     branches: [ main, master ]
 
+# 깃허브 액션이 레포지토리에 커밋/푸시할 수 있도록 권한 부여
+permissions:
+  contents: write
+
 jobs:
   organize:
     runs-on: ubuntu-latest
@@ -15,23 +19,29 @@ jobs:
         run: |
           if [ -d "프로그래머스" ]; then
             cd 프로그래머스
-            # 0 폴더나 개별 문제 폴더들을 탐색
-            for d in */; do
-              dir_name=$(basename "$d")
-              if [ "$dir_name" != "Python" ] && [ "$dir_name" != "CSharp" ] && [ "$dir_name" != "파이썬" ]; then
-                if [ -d "$d" ]; then
-                  if find "$d" -name "*.cs" | grep -q .; then
-                    echo "Moving $dir_name to CSharp"
-                    mkdir -p CSharp
-                    mv "$d" CSharp/
-                  elif find "$d" -name "*.py" | grep -q .; then
-                    echo "Moving $dir_name to 파이썬"
-                    mkdir -p 파이썬
-                    mv "$d" 파이썬/
-                  fi
-                fi
+            
+            # C# (.cs) 파일이 포함된 문제 폴더를 찾아 CSharp 폴더로 이동
+            find . -name "*.cs" ! -path "./CSharp/*" ! -path "./파이썬/*" ! -path "./Python/*" | while read -r cs_file; do
+              dir_path=$(dirname "$cs_file")
+              if [ "$dir_path" != "." ]; then
+                echo "Moving $dir_path to CSharp"
+                mkdir -p CSharp
+                mv "$dir_path" CSharp/
               fi
             done
+
+            # 파이썬 (.py) 파일이 포함된 문제 폴더를 찾아 파이썬 폴더로 이동
+            find . -name "*.py" ! -path "./CSharp/*" ! -path "./파이썬/*" ! -path "./Python/*" | while read -r py_file; do
+              dir_path=$(dirname "$py_file")
+              if [ "$dir_path" != "." ]; then
+                echo "Moving $dir_path to 파이썬"
+                mkdir -p 파이썬
+                mv "$dir_path" 파이썬/
+              fi
+            done
+
+            # 파일들이 빠져나가 빈 상태가 된 레벨 폴더(0 등) 깔끔하게 삭제
+            find . -type d -empty -delete
           fi
 
       - name: Commit and push if changes
