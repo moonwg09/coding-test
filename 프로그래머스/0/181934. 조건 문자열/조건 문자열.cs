@@ -1,0 +1,15 @@
+
+using System;
+
+public class Solution {
+    public int solution(string ineq, string eq, int n, int m) {
+        int answer = 0;
+        string ie = ineq + eq;
+        if(ie == ">=") return n >= m ? 1 : 0;
+        if(ie == "<=") return n <= m ? 1 : 0;
+        if(ie == ">!") return n > m ? 1 : 0;
+        if(ie == "<!") return n < m ? 1 : 0;
+
+        return answer;
+    }
+}
